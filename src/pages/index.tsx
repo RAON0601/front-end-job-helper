@@ -11,6 +11,9 @@ type InfoType = {
   link: string;
 };
 
+const cache: any = {};
+const url = "https://jungmini.s3.ap-northeast-2.amazonaws.com/info.json";
+
 const IndexPage = () => {
   const [infos, setInfos] = React.useState<InfoType[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -23,12 +26,16 @@ const IndexPage = () => {
 
   React.useEffect(() => {
     const fetchInfoData = async () => {
+      if (cache[url]) {
+        setInfos(cache[url]);
+        return;
+      }
+
       try {
-        const res = await fetch(
-          "https://jungmini.s3.ap-northeast-2.amazonaws.com/info.json"
-        );
+        const res = await fetch(url);
         setLoading(true);
         const data = (await res.json()) as InfoType[];
+        cache[url] = data;
         setInfos(data);
         setLoading(false);
       } catch (e) {
