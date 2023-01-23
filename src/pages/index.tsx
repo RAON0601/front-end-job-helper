@@ -28,6 +28,7 @@ const IndexPage = () => {
     const fetchInfoData = async () => {
       if (cache[url]) {
         setInfos(cache[url]);
+        setLoading(false);
         return;
       }
 
